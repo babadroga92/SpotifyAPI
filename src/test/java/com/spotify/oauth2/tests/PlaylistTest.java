@@ -8,6 +8,9 @@ import io.qameta.allure.testng.AllureTestNg;
 import io.restassured.response.Response;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+
+import static com.spotify.oauth2.utils.FakerUtils.generateDescription;
+import static com.spotify.oauth2.utils.FakerUtils.generateName;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -33,7 +36,7 @@ public class PlaylistTest {
     @Description("Testing if the user can create a playlist.")
     @Test(description = "Should be able to create a playlist.")
     public void shouldBeAbleToCreatePlaylist(){
-        Playlist requestPlaylist = playlistBuilder("Elizabeth Playlist", "Elizabeth romantic music", false);
+        Playlist requestPlaylist = playlistBuilder(generateName(), generateDescription(), false);
 
         Response response = PlaylistApi.post(requestPlaylist);
         assertStatusCode(response.getStatusCode(), 201);
@@ -44,7 +47,7 @@ public class PlaylistTest {
     @Description("Testing if the user can open the desired playlist.")
     @Test(description = "Should be able to fetch the playlist.")
     public void shouldBeAbleToFetchThePlaylist(){
-        Playlist requestPlaylist = playlistBuilder("Elizabeth Playlist", "Elizabeth romantic music", true);
+        Playlist requestPlaylist = playlistBuilder("Playlistk- M_xOt J,08-- c_2ymC w ,_n 2", "DescriptionA&amp;#+4&amp;#ZOh&amp;##&amp;+#&amp;+p&amp;#e#+&amp;+&#x2F;_L_+&amp;o_d782@_48Ab&amp;_#+__", true);
         Response deserializedResponsePlaylist = PlaylistApi.get(DataLoader.getInstance().getPlaylistId());
         Playlist serializedResponsePlaylist = deserializedResponsePlaylist.as(Playlist.class);
         System.out.println("Request playlist public: " + requestPlaylist.get_public());
@@ -54,14 +57,14 @@ public class PlaylistTest {
     @Description("Testing if the user can update the playlist.")
     @Test(description = "Should be able to Update playlist.")
     public void shouldBeAbleToUpdatePlaylist(){
-        Playlist requestPlaylist = playlistBuilder("Elizabeth Playlist", "Elizabeth romantic music", false);
+        Playlist requestPlaylist = playlistBuilder(generateName(), generateDescription(), false);
         Response deserializedResponse = PlaylistApi.update(requestPlaylist, DataLoader.getInstance().getPlaylistId());
         assertStatusCode(deserializedResponse.getStatusCode(), 200);
     }
     @Description("Testing if the user can create a playlist without providing the name.")
     @Test(description = "Should Not be able to create a playlist without name")
     public void shouldNotBeAbleToCreateAPlaylistWithoutName(){
-        Playlist requestPlaylist = playlistBuilder("", "Elizabeth romantic music", false);
+        Playlist requestPlaylist = playlistBuilder("", generateDescription(), false);
         Response response = PlaylistApi.post(requestPlaylist);
         assertStatusCode(response.statusCode(), 400);
         assertError(response.as(Error.class), 400,"Missing required field: name");
@@ -69,7 +72,7 @@ public class PlaylistTest {
     @Description("Testing if the user can create a playlist with expired token.")
     @Test(description = "Should not be able to create a playlist with expired token.")
     public void shouldNotBeAbleToCreateAPlaylistWithExpiredToken(){
-        Playlist requestPlaylist = playlistBuilder("Elizabeth con su carita bonita", "Elizabeth romantic music", false);
+        Playlist requestPlaylist = playlistBuilder(generateName(),generateDescription(), false);
         Response response = PlaylistApi.post("randomValue",requestPlaylist);
         assertStatusCode(response.statusCode(),401);
         assertError(response.as(Error.class), 401,"Invalid access token");

@@ -76,6 +76,13 @@
             <version>2.29.1</version>
         </dependency>
 
+        <!-- Java Faker API -->
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
     </dependencies>
 
     <!-- Define the version of AspectJ -->
