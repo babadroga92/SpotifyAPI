@@ -1,5 +1,7 @@
 Spotify API Testing Framework
+
 This project focuses on testing the Spotify Web API, specifically for the Playlist endpoints. It utilizes a variety of tools and frameworks to ensure comprehensive testing and seamless integration.
+Link to Spotify documentation --> Link tohttps://developer.spotify.com/documentation/web-api  
 
 Features
 Implemented Tests:
