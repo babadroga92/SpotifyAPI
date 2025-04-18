@@ -1,4 +1,5 @@
 package com.spotify.oauth2.tests;
+import com.spotify.oauth2.api.StatusCode;
 import com.spotify.oauth2.api.applicationApi.PlaylistApi;
 import com.spotify.oauth2.pojo.Error;
 import com.spotify.oauth2.pojo.Playlist;
@@ -39,7 +40,7 @@ public class PlaylistTest {
         Playlist requestPlaylist = playlistBuilder(generateName(), generateDescription(), false);
 
         Response response = PlaylistApi.post(requestPlaylist);
-        assertStatusCode(response.getStatusCode(), 201);
+        assertStatusCode(response.getStatusCode(), StatusCode.CODE_201.getCode());
 
        // Playlist responsePlaylist = response.as(Playlist.class); // deserializing the JSON
         assertPlaylistEqual(response.as(Playlist.class), requestPlaylist);
@@ -47,35 +48,33 @@ public class PlaylistTest {
     @Description("Testing if the user can open the desired playlist.")
     @Test(description = "Should be able to fetch the playlist.")
     public void shouldBeAbleToFetchThePlaylist(){
-        Playlist requestPlaylist = playlistBuilder("Playlistk- M_xOt J,08-- c_2ymC w ,_n 2", "DescriptionA&amp;#+4&amp;#ZOh&amp;##&amp;+#&amp;+p&amp;#e#+&amp;+&#x2F;_L_+&amp;o_d782@_48Ab&amp;_#+__", true);
-        Response deserializedResponsePlaylist = PlaylistApi.get(DataLoader.getInstance().getPlaylistId());
+        Playlist requestPlaylist = playlistBuilder("Elizabeth Playlist", "Music for her soul", true);
+        Response deserializedResponsePlaylist = PlaylistApi.get(DataLoader.getInstance().getPlaylistId("get_playlist_id"));
         Playlist serializedResponsePlaylist = deserializedResponsePlaylist.as(Playlist.class);
-        System.out.println("Request playlist public: " + requestPlaylist.get_public());
-        System.out.println("Response playlist public: " + serializedResponsePlaylist.get_public());
         assertPlaylistEqual(serializedResponsePlaylist, requestPlaylist);
     }
     @Description("Testing if the user can update the playlist.")
     @Test(description = "Should be able to Update playlist.")
     public void shouldBeAbleToUpdatePlaylist(){
         Playlist requestPlaylist = playlistBuilder(generateName(), generateDescription(), false);
-        Response deserializedResponse = PlaylistApi.update(requestPlaylist, DataLoader.getInstance().getPlaylistId());
-        assertStatusCode(deserializedResponse.getStatusCode(), 200);
+        Response deserializedResponse = PlaylistApi.update(requestPlaylist, DataLoader.getInstance().getPlaylistId("update_playlist_with_id"));
+        assertStatusCode(deserializedResponse.getStatusCode(), StatusCode.CODE_200.getCode());
     }
     @Description("Testing if the user can create a playlist without providing the name.")
     @Test(description = "Should Not be able to create a playlist without name")
     public void shouldNotBeAbleToCreateAPlaylistWithoutName(){
         Playlist requestPlaylist = playlistBuilder("", generateDescription(), false);
         Response response = PlaylistApi.post(requestPlaylist);
-        assertStatusCode(response.statusCode(), 400);
-        assertError(response.as(Error.class), 400,"Missing required field: name");
+        assertStatusCode(response.statusCode(), StatusCode.CODE_400.getCode());
+        assertError(response.as(Error.class), StatusCode.CODE_400.getCode(),StatusCode.CODE_400.getMessage());
     }
     @Description("Testing if the user can create a playlist with expired token.")
     @Test(description = "Should not be able to create a playlist with expired token.")
     public void shouldNotBeAbleToCreateAPlaylistWithExpiredToken(){
         Playlist requestPlaylist = playlistBuilder(generateName(),generateDescription(), false);
         Response response = PlaylistApi.post("randomValue",requestPlaylist);
-        assertStatusCode(response.statusCode(),401);
-        assertError(response.as(Error.class), 401,"Invalid access token");
+        assertStatusCode(response.statusCode(),StatusCode.CODE_401.getCode());
+        assertError(response.as(Error.class), StatusCode.CODE_401.getCode(),StatusCode.CODE_401.getMessage());
     }
     @Step
     public void assertPlaylistEqual(Playlist responsePlaylist, Playlist requestPlaylist){

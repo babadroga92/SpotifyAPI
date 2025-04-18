@@ -17,10 +17,10 @@ public class DataLoader {
         return dataLoader;
     }
 
-    public String getPlaylistId(){
-        String prop = properties.getProperty("get_playlist_id");
+    public String getPlaylistId(String playlist){
+        String prop = properties.getProperty(playlist);
         if(prop != null)
             return prop;
-        else throw new RuntimeException("Property get_playlist_id is not specified in the config.properties file");
+        else throw new RuntimeException("Property: " + playlist + " is not specified in the config.properties file");
     }
 }
