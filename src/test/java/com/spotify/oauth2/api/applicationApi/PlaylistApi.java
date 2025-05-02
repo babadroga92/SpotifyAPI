@@ -13,15 +13,6 @@ public class PlaylistApi {
     @Step
     public static Response post(Playlist requestPlaylist){
         return RestResource.post(USERS + "/" + ConfigLoader.getInstance().getUser() + PLAYLISTS, getToken(), requestPlaylist);
-//        return given(getRequestSpec())
-//                .body(requestPlaylist)
-//                .header("Authorization", "Bearer " + access_token)
-//                .when()
-//                .post("/users/31q7mhfvdikbfbhklg7aohgtha3a/playlists")
-//                .then()
-//                .spec(getResponseSpec())
-//                .extract()
-//                .response();
     }
     public static Response post(String token, Playlist requestPlaylist){
         return RestResource.post(USERS + "/" + ConfigLoader.getInstance().getUser() + PLAYLISTS, token, requestPlaylist);
